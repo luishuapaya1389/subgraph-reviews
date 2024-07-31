@@ -65,6 +65,12 @@
             "locationId": "loc-5",
             "rating": 6,
             "comment": "Thanks planet! I was amazed at the quality of planet. Planet did exactly what you said it does... !!!!!"
+        },
+        {
+            "id": "rev-12",
+            "locationId": "loc-6",
+            "rating": 5,
+            "comment": "Thanks planet! I was amazed at the quality of planet. Planet did exactly what you said it does... !!!!!"
         }
     ]
 }
