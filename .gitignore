@@ -1,0 +1,7 @@
+# Ignora la carpeta node_modules
+node_modules
+
+# Ignora la carpeta de VC
+.vscode
+
+.DS_Store
