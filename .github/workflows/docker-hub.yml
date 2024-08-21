@@ -1,0 +1,59 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'manifests/**'
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Get latest tag
+      id: latest_tag
+      uses: jacobtomlinson/gha-get-docker-hub-tags@0.1.1
+      with:
+        org: 'luishuapaya'  # Docker Hub user or organisation name
+        repo: 'subgraph-reviews'  # Docker Hub repository name
+    
+    # Optionally check the tag we got back
+    - name: Check outputs
+      run: |
+        echo "Latest Image Tag - ${{ steps.latest_tag.outputs.tag }}"
+        CURRENT_VER=${{ steps.latest_tag.outputs.tag }}
+        CURRENT_VER_ARR=(${CURRENT_VER//./ }) # Replaces dots with spaces then convert to array
+        CURRENT_VER_MAJOR=${CURRENT_VER_ARR[0]}
+        CURRENT_VER_MINOR=${CURRENT_VER_ARR[1]}
+        CURRENT_VER_PATCH=${CURRENT_VER_ARR[2]}
+
+        NEW_VER_PATCH=$((CURRENT_VER_PATCH+1))
+
+        echo "NEW_VER=$CURRENT_VER_MAJOR.$CURRENT_VER_MINOR.$NEW_VER_PATCH" >> $GITHUB_ENV
+        echo "version actual de la imagen $NEW_VER"
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags:
+          luishuapaya/subgraph-reviews:${{ env.NEW_VER }}
+        build-args: |
+          VERSION=${{ env.NEW_VER }}

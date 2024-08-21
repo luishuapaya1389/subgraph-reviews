@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-subgraph-reviews
+  labels:
+    type: supergraph-poc
+  namespace: subgraph-app
+spec:
+  template:
+    metadata:
+      name: pod-subgraph-reviews
+      labels:
+        type: subgraph-reviews
+    spec:
+      containers:
+        - name: container-subgraph-reviews
+          image: docker.io/luishuapaya/subgraph-reviews:1.0.0 # {"$imagepolicy":"flux-system:image-policy-subgraph-reviews"}
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 4002
+              name: http-reviews
+  replicas: 2
+  selector:
+    matchLabels:
+      type: subgraph-reviews
