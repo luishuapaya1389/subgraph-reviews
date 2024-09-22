@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: container-subgraph-reviews
-          image: docker.io/luishuapaya/subgraph-reviews:1.0.0 # {"$imagepolicy":"flux-system:image-policy-subgraph-reviews"}
+          image: docker.io/luishuapaya/subgraph-reviews:1.1.0 # {"$imagepolicy":"flux-system:image-policy-subgraph-reviews"}
           imagePullPolicy: "Always"
           ports:
             - containerPort: 4002
